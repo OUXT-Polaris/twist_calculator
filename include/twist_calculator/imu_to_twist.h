@@ -8,6 +8,7 @@
 
 namespace twist_calculator
 {
+    constexpr double gravitational_acceleration = 9.80665;
     class ImuToTwist
     {
     public:
@@ -22,6 +23,7 @@ namespace twist_calculator
         ros::Subscriber curretn_twist_sub_;
         ros::Publisher twist_pub_;
         bool publish_timestamp_;
+        ros::Time stamp_;
         std::string imu_topic_;
         std::string curretn_twist_topic_;
         geometry_msgs::Twist curretn_twist_;

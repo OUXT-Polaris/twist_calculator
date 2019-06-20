@@ -23,6 +23,7 @@ namespace twist_calculator
         {
             twist_pub_ = pnh_.advertise<geometry_msgs::Twist>("twist",1);
         }
+        stamp_ = ros::Time::now();
         imu_sub_ = nh_.subscribe(imu_topic_,1,&ImuToTwist::imuCallback,this);
         curretn_twist_sub_ = nh_.subscribe(curretn_twist_topic_,1,&ImuToTwist::currentTwistCallback,this);
     }
@@ -40,10 +41,12 @@ namespace twist_calculator
 
     void ImuToTwist::imuCallback(const sensor_msgs::Imu::ConstPtr msg)
     {
-        curretn_twist_.linear.x = msg->linear_acceleration.x;
-        curretn_twist_.linear.y = msg->linear_acceleration.y;
-        curretn_twist_.linear.z = msg->linear_acceleration.z;
+        ros::Time now = ros::Time::now();
+        curretn_twist_.linear.x = curretn_twist_.linear.x + (now-stamp_).toSec()*msg->linear_acceleration.x;
+        curretn_twist_.linear.y = curretn_twist_.linear.y + (now-stamp_).toSec()*msg->linear_acceleration.y;
+        curretn_twist_.linear.z = curretn_twist_.linear.z + (now-stamp_).toSec()*(msg->linear_acceleration.z-gravitational_acceleration);
         curretn_twist_.angular = msg->angular_velocity;
+        stamp_ = now;
         if(publish_timestamp_)
         {
             geometry_msgs::TwistStamped twist_stamped;
