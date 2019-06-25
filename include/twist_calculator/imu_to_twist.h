@@ -5,6 +5,8 @@
 #include <ros/ros.h>
 #include <geometry_msgs/TwistStamped.h>
 #include <sensor_msgs/Imu.h>
+#include <tf2_ros/transform_listener.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 namespace twist_calculator
 {
@@ -24,9 +26,12 @@ namespace twist_calculator
         ros::Publisher twist_pub_;
         bool publish_timestamp_;
         ros::Time stamp_;
+        std::string robot_frame_;
         std::string imu_topic_;
         std::string curretn_twist_topic_;
         geometry_msgs::Twist curretn_twist_;
+        tf2_ros::TransformListener listener_;
+        tf2_ros::Buffer buffer_;
     };
 }
 

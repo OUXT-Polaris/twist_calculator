@@ -7,12 +7,14 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   sensor_msgs
   roscpp
+  tf2_ros
+  tf2_geometry_msgs
 )
 
 catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES twist_calculator
-  CATKIN_DEPENDS geometry_msgs roscpp
+  CATKIN_DEPENDS geometry_msgs roscpp tf2_ros tf2_geometry_msgs
 #  DEPENDS system_lib
 )
 
