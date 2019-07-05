@@ -17,7 +17,7 @@ namespace twist_calculator
         ImuToTwist(ros::NodeHandle nh,ros::NodeHandle pnh);
         ~ImuToTwist();
     private:
-        void currentTwistCallback(const geometry_msgs::Twist::ConstPtr msg);
+        void currentTwistCallback(const geometry_msgs::TwistStamped::ConstPtr msg);
         void imuCallback(const sensor_msgs::Imu::ConstPtr msg);
         ros::NodeHandle nh_;
         ros::NodeHandle pnh_;
@@ -25,6 +25,7 @@ namespace twist_calculator
         ros::Subscriber curretn_twist_sub_;
         ros::Publisher twist_pub_;
         bool publish_timestamp_;
+        bool enable_twist_reset_;
         ros::Time stamp_;
         std::string robot_frame_;
         std::string imu_topic_;

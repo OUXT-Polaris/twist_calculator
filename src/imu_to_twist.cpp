@@ -7,6 +7,7 @@ namespace twist_calculator
         nh_ = nh;
         pnh_ = pnh;
         pnh_.param<bool>("publish_timestamp", publish_timestamp_, false);
+        pnh_.param<bool>("enable_twist_reset", enable_twist_reset_, true);
         pnh_.param<std::string>("robot_frame", robot_frame_, "/base_link");
         pnh_.param<std::string>("imu_topic", imu_topic_, "/imu/data");
         pnh_.param<std::string>("curretn_twist_topic", curretn_twist_topic_, "/curretn_twist");
@@ -26,7 +27,10 @@ namespace twist_calculator
         }
         stamp_ = ros::Time::now();
         imu_sub_ = nh_.subscribe(imu_topic_,1,&ImuToTwist::imuCallback,this);
-        curretn_twist_sub_ = nh_.subscribe(curretn_twist_topic_,1,&ImuToTwist::currentTwistCallback,this);
+        if(enable_twist_reset_)
+        {
+            curretn_twist_sub_ = nh_.subscribe(curretn_twist_topic_,1,&ImuToTwist::currentTwistCallback,this);
+        }
     }
 
     ImuToTwist::~ImuToTwist()
@@ -34,9 +38,9 @@ namespace twist_calculator
 
     }
 
-    void ImuToTwist::currentTwistCallback(const geometry_msgs::Twist::ConstPtr msg)
+    void ImuToTwist::currentTwistCallback(const geometry_msgs::TwistStamped::ConstPtr msg)
     {
-        curretn_twist_ = *msg;
+        curretn_twist_ = msg->twist;
         return;
     }
 
