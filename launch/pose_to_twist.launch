@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="pose_topic" default="/robot_pose"/>
+    <arg name="curretn_twist_topic" default="/curretn_twist"/>
+    <arg name="publish_timestamp" default="false"/>
+    <arg name="enable_twist_reset" default="true"/>
+    <arg name="robot_frame" default="base_link"/>
+
+    <node pkg="twist_calculator" type="pose_to_twist_node" name="pose_to_twist_node" output="screen" respawn="true" respawn_delay="0">
+        <param name="pose_topic" value="$(arg pose_topic)"/>
+        <param name="curretn_twist_topic" value="$(arg curretn_twist_topic)"/>
+        <param name="publish_timestamp" value="$(arg publish_timestamp)"/>
+        <param name="robot_frame" value="$(arg robot_frame)"/>
+        <param name="enable_twist_reset" value="$(arg enable_twist_reset)"/>
+    </node>
+</launch>

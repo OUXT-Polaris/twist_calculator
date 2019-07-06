@@ -27,8 +27,12 @@ include_directories(
 add_executable(imu_to_twist_node src/imu_to_twist_node.cpp src/imu_to_twist.cpp)
 target_link_libraries(imu_to_twist_node ${catkin_LIBRARIES})
 
+# calculate twist from pose
+add_executable(pose_to_twist_node src/pose_to_twist_node.cpp src/pose_to_twist.cpp)
+target_link_libraries(pose_to_twist_node ${catkin_LIBRARIES})
+
 # install executables
-install(TARGETS imu_to_twist_node
+install(TARGETS imu_to_twist_node pose_to_twist_node
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
