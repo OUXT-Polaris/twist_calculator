@@ -5,8 +5,10 @@
 #include <ros/ros.h>
 #include <geometry_msgs/TwistStamped.h>
 #include <geometry_msgs/PoseStamped.h>
-#include <tf2_ros/transform_listener.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <quaternion_operation/quaternion_operation.h>
+
+//headers in boost
+#include <boost/circular_buffer.hpp>
 
 namespace twist_calculator
 {
@@ -16,15 +18,15 @@ namespace twist_calculator
         PoseToTwist(ros::NodeHandle nh,ros::NodeHandle pnh);
         ~PoseToTwist();
     private:
-        tf2_ros::TransformListener listener_;
-        tf2_ros::Buffer buffer_;
         bool publish_timestamp_;
-        bool enable_twist_reset_;
         std::string robot_frame_;
         std::string pose_topic_;
-        std::string curretn_twist_topic_;
         ros::NodeHandle nh_;
         ros::NodeHandle pnh_;
+        ros::Publisher twist_pub_;
+        void poseCallback(const geometry_msgs::PoseStamped::ConstPtr msg);
+        ros::Subscriber pose_sub_;
+        boost::circular_buffer<geometry_msgs::PoseStamped> pose_buffer_;
     };
 }
 
