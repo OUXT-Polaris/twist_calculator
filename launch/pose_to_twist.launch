@@ -4,11 +4,13 @@
     <arg name="curretn_twist_topic" default="/curretn_twist"/>
     <arg name="publish_timestamp" default="false"/>
     <arg name="robot_frame" default="base_link"/>
+    <arg name="map_frame" default="map"/>
 
     <node pkg="twist_calculator" type="pose_to_twist_node" name="pose_to_twist_node" output="screen" respawn="true" respawn_delay="0">
         <param name="pose_topic" value="$(arg pose_topic)"/>
         <param name="curretn_twist_topic" value="$(arg curretn_twist_topic)"/>
         <param name="publish_timestamp" value="$(arg publish_timestamp)"/>
         <param name="robot_frame" value="$(arg robot_frame)"/>
+        <param name="map_frame" value="$(arg map_frame)"/>
     </node>
 </launch>
