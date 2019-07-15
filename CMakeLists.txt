@@ -9,12 +9,15 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   tf2_ros
   tf2_geometry_msgs
+  quaternion_operation
 )
+
+find_package(Eigen3 REQUIRED)
 
 catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES twist_calculator
-  CATKIN_DEPENDS geometry_msgs roscpp tf2_ros tf2_geometry_msgs
+  CATKIN_DEPENDS geometry_msgs roscpp tf2_ros tf2_geometry_msgs quaternion_operation
 #  DEPENDS system_lib
 )
 
@@ -27,8 +30,12 @@ include_directories(
 add_executable(imu_to_twist_node src/imu_to_twist_node.cpp src/imu_to_twist.cpp)
 target_link_libraries(imu_to_twist_node ${catkin_LIBRARIES})
 
+# calculate twist from pose
+add_executable(pose_to_twist_node src/pose_to_twist_node.cpp src/pose_to_twist.cpp)
+target_link_libraries(pose_to_twist_node ${catkin_LIBRARIES})
+
 # install executables
-install(TARGETS imu_to_twist_node
+install(TARGETS imu_to_twist_node pose_to_twist_node
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

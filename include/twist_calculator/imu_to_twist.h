@@ -26,7 +26,7 @@ namespace twist_calculator
         ros::Publisher twist_pub_;
         bool publish_timestamp_;
         bool enable_twist_reset_;
-        ros::Time stamp_;
+        boost::optional<ros::Time> stamp_;
         std::string robot_frame_;
         std::string imu_topic_;
         std::string curretn_twist_topic_;

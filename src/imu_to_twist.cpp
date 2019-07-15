@@ -25,7 +25,6 @@ namespace twist_calculator
         {
             twist_pub_ = pnh_.advertise<geometry_msgs::Twist>("twist",1);
         }
-        stamp_ = ros::Time::now();
         imu_sub_ = nh_.subscribe(imu_topic_,1,&ImuToTwist::imuCallback,this);
         if(enable_twist_reset_)
         {
@@ -62,26 +61,34 @@ namespace twist_calculator
         acc_vec.vector = msg->linear_acceleration;
         tf2::doTransform(acc_vec,acc_vec,transform_stamped);
         ros::Time now = ros::Time::now();
-        curretn_twist_.linear.x = curretn_twist_.linear.x + (now-stamp_).toSec()*acc_vec.vector.x;
-        curretn_twist_.linear.y = curretn_twist_.linear.y + (now-stamp_).toSec()*acc_vec.vector.y;
-        curretn_twist_.linear.z = curretn_twist_.linear.z + (now-stamp_).toSec()*(acc_vec.vector.z-gravitational_acceleration);
-        geometry_msgs::Vector3Stamped ang_vel_vec;
-        ang_vel_vec.header = msg->header;
-        ang_vel_vec.vector = msg->angular_velocity;
-        tf2::doTransform(ang_vel_vec,ang_vel_vec,transform_stamped);
-        curretn_twist_.angular = ang_vel_vec.vector;
-        stamp_ = now;
-        if(publish_timestamp_)
+        if(stamp_)
         {
-            geometry_msgs::TwistStamped twist_stamped;
-            twist_stamped.header = msg->header;
-            twist_stamped.header.frame_id = robot_frame_;
-            twist_stamped.twist = curretn_twist_;
-            twist_pub_.publish(twist_stamped);
+            curretn_twist_.linear.x = curretn_twist_.linear.x + (now-stamp_.get()).toSec()*acc_vec.vector.x;
+            curretn_twist_.linear.y = curretn_twist_.linear.y + (now-stamp_.get()).toSec()*acc_vec.vector.y;
+            curretn_twist_.linear.z = curretn_twist_.linear.z + (now-stamp_.get()).toSec()*(acc_vec.vector.z-gravitational_acceleration);
+            geometry_msgs::Vector3Stamped ang_vel_vec;
+            ang_vel_vec.header = msg->header;
+            ang_vel_vec.vector = msg->angular_velocity;
+            tf2::doTransform(ang_vel_vec,ang_vel_vec,transform_stamped);
+            curretn_twist_.angular = ang_vel_vec.vector;
+            stamp_ = now;
+            if(publish_timestamp_)
+            {
+                geometry_msgs::TwistStamped twist_stamped;
+                twist_stamped.header = msg->header;
+                twist_stamped.header.stamp = now;
+                twist_stamped.header.frame_id = robot_frame_;
+                twist_stamped.twist = curretn_twist_;
+                twist_pub_.publish(twist_stamped);
+            }
+            else
+            {
+                twist_pub_.publish(curretn_twist_);
+            }
         }
         else
         {
-            twist_pub_.publish(curretn_twist_);
+            stamp_ = now;
         }
         return;
     }
