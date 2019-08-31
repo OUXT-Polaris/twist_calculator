@@ -63,9 +63,9 @@ namespace twist_calculator
         ros::Time now = ros::Time::now();
         if(stamp_)
         {
-            curretn_twist_.linear.x = curretn_twist_.linear.x + (now-stamp_.get()).toSec()*acc_vec.vector.x;
-            curretn_twist_.linear.y = curretn_twist_.linear.y + (now-stamp_.get()).toSec()*acc_vec.vector.y;
-            curretn_twist_.linear.z = curretn_twist_.linear.z + (now-stamp_.get()).toSec()*(acc_vec.vector.z-gravitational_acceleration);
+            curretn_twist_.linear.x = curretn_twist_.linear.x + (now-stamp_.get()).toSec()*acc_vec.vector.x/2;
+            curretn_twist_.linear.y = curretn_twist_.linear.y + (now-stamp_.get()).toSec()*acc_vec.vector.y/2;
+            curretn_twist_.linear.z = curretn_twist_.linear.z + (now-stamp_.get()).toSec()*(acc_vec.vector.z-gravitational_acceleration)/2;
             geometry_msgs::Vector3Stamped ang_vel_vec;
             ang_vel_vec.header = msg->header;
             ang_vel_vec.vector = msg->angular_velocity;
