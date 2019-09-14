@@ -17,6 +17,8 @@ namespace twist_calculator
         curretn_twist_.angular.x = 0.0;
         curretn_twist_.angular.y = 0.0;
         curretn_twist_.angular.z = 0.0;
+        dynaparam_callback_func_ = boost::bind(&ImuToTwist::dynaparamCallback, this, _1, _2);
+        dynaparam_server_.setCallback(dynaparam_callback_func_);
         if(publish_timestamp_)
         {
             twist_pub_ = pnh_.advertise<geometry_msgs::TwistStamped>("twist",1);
@@ -35,6 +37,12 @@ namespace twist_calculator
     ImuToTwist::~ImuToTwist()
     {
 
+    }
+
+    void ImuToTwist::dynaparamCallback(twist_calculator::ImuToTwistConfig &config, uint32_t level)
+    {
+        config_ = config;
+        return;
     }
 
     void ImuToTwist::currentTwistCallback(const geometry_msgs::TwistStamped::ConstPtr msg)
@@ -63,9 +71,9 @@ namespace twist_calculator
         ros::Time now = ros::Time::now();
         if(stamp_)
         {
-            curretn_twist_.linear.x = curretn_twist_.linear.x + (now-stamp_.get()).toSec()*acc_vec.vector.x/2;
-            curretn_twist_.linear.y = curretn_twist_.linear.y + (now-stamp_.get()).toSec()*acc_vec.vector.y/2;
-            curretn_twist_.linear.z = curretn_twist_.linear.z + (now-stamp_.get()).toSec()*(acc_vec.vector.z-gravitational_acceleration)/2;
+            curretn_twist_.linear.x = curretn_twist_.linear.x + (now-stamp_.get()).toSec()*(acc_vec.vector.x-config_.acceralation_offset_x);
+            curretn_twist_.linear.y = curretn_twist_.linear.y + (now-stamp_.get()).toSec()*(acc_vec.vector.y-config_.acceralation_offset_y);
+            curretn_twist_.linear.z = curretn_twist_.linear.z + (now-stamp_.get()).toSec()*(acc_vec.vector.z-config_.acceralation_offset_z-gravitational_acceleration);
             geometry_msgs::Vector3Stamped ang_vel_vec;
             ang_vel_vec.header = msg->header;
             ang_vel_vec.vector = msg->angular_velocity;

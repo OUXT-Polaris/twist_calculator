@@ -10,14 +10,19 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_ros
   tf2_geometry_msgs
   quaternion_operation
+  dynamic_reconfigure
 )
 
 find_package(Eigen3 REQUIRED)
 
+generate_dynamic_reconfigure_options(
+  cfg/ImuToTwist.cfg
+)
+
 catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES twist_calculator
-  CATKIN_DEPENDS geometry_msgs roscpp tf2_ros tf2_geometry_msgs quaternion_operation
+  CATKIN_DEPENDS geometry_msgs roscpp tf2_ros tf2_geometry_msgs quaternion_operation dynamic_reconfigure
 #  DEPENDS system_lib
 )
 

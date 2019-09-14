@@ -7,6 +7,10 @@
 #include <sensor_msgs/Imu.h>
 #include <tf2_ros/transform_listener.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <dynamic_reconfigure/server.h>
+
+// Headers in this package
+#include <twist_calculator/ImuToTwistConfig.h>
 
 namespace twist_calculator
 {
@@ -33,6 +37,10 @@ namespace twist_calculator
         geometry_msgs::Twist curretn_twist_;
         tf2_ros::TransformListener listener_;
         tf2_ros::Buffer buffer_;
+        dynamic_reconfigure::Server<twist_calculator::ImuToTwistConfig> dynaparam_server_;
+        dynamic_reconfigure::Server<twist_calculator::ImuToTwistConfig>::CallbackType dynaparam_callback_func_;
+        void dynaparamCallback(twist_calculator::ImuToTwistConfig &config, uint32_t level);
+        twist_calculator::ImuToTwistConfig config_;
     };
 }
 
