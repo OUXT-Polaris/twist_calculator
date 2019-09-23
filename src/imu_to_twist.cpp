@@ -4,6 +4,7 @@ namespace twist_calculator
 {
     ImuToTwist::ImuToTwist(ros::NodeHandle nh,ros::NodeHandle pnh) : listener_(buffer_)
     {
+        buffer_.setUsingDedicatedThread(true);
         nh_ = nh;
         pnh_ = pnh;
         pnh_.param<bool>("publish_timestamp", publish_timestamp_, false);
@@ -56,7 +57,7 @@ namespace twist_calculator
         geometry_msgs::TransformStamped transform_stamped;
         try
         {
-            transform_stamped = buffer_.lookupTransform(robot_frame_, msg->header.frame_id, msg->header.stamp);
+            transform_stamped = buffer_.lookupTransform(robot_frame_, msg->header.frame_id, msg->header.stamp, ros::Duration(0.1));
         }
         catch (tf2::TransformException &ex)
         {
